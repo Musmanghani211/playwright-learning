@@ -2,21 +2,22 @@
   "name": "playwright",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/Musmanghani211/Login-code-practice-using-playwright#readme",
-  "bugs": {
-    "url": "https://github.com/Musmanghani211/Login-code-practice-using-playwright/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Musmanghani211/Login-code-practice-using-playwright.git"
-  },
-  "license": "ISC",
-  "author": "",
-  "type": "commonjs",
   "main": "index.js",
   "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Musmanghani211/playwright-learning.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Musmanghani211/playwright-learning/issues"
+  },
+  "homepage": "https://github.com/Musmanghani211/playwright-learning#readme",
   "devDependencies": {
-    "@playwright/test": "^1.59.1",
-    "@types/node": "^25.5.2"
+    "@playwright/test": "^1.61.0",
+    "@types/node": "^26.0.0"
   }
 }
