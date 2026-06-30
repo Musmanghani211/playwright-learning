@@ -1,4 +1,5 @@
 import{test, expect} from '@playwright/test';
+import { type } from 'node:os';
 
 test('check assertions', async ({page}) => {
     // Navigate to the login page
@@ -55,7 +56,7 @@ await page.goto('https://demoqa.com/select-menu');
 await page.locator('#cars').selectOption(['Volvo', 'Saab', 'Opel']);
 await expect(page.locator('#cars')).toHaveValues(['volvo', 'saab', 'opel']);
 })
-test.only('toHaveValues assertions for multi select using drop down', async ({page}) => {
+test('toHaveValues assertions for multi select using drop down', async ({page}) => {
   await page.goto('https://demoqa.com/select-menu');
 
   const multiSelectContainer = page.locator('.css-b62m3t-container').filter({has: page.locator('#react-select-4-input')});
@@ -68,5 +69,42 @@ test.only('toHaveValues assertions for multi select using drop down', async ({pa
   await expect(multiSelectContainer).toContainText('Black');
   await expect(multiSelectContainer).toContainText('Red');
   await expect(multiSelectContainer).toContainText('Green');
+})
+
+//state
+
+test('check the enebale and disable asssertions', async({page}) => {
+await page.goto('https://www.qa-practice.com/elements/button/disabled');
+await page.locator('#id_select_state').selectOption('Disabled');
+await expect(page.locator('#submit-id-submit')).toBeDisabled();
+await page.locator('#id_select_state').selectOption('Enabled');
+await expect(page.locator('#submit-id-submit')).toBeEnabled();
 
 })
+
+//check and not checked
+
+test('verify the checks and not checks', async ({page}) => {
+await page.goto('https://the-internet.herokuapp.com/?utm_source=chatgpt.com');
+await page.getByRole('link', {name: 'Checkboxes'}).click();
+await expect(page).toHaveURL('https://the-internet.herokuapp.com/checkboxes');
+const checkbox1 = await page.locator('input[type="checkbox"]').nth(0);
+const checkbox2 = await page.locator('input[type="checkbox"]').nth(1);
+await expect(checkbox1).not.toBeChecked();
+await expect(checkbox2).toBeChecked();
+await checkbox1.check();
+await expect(checkbox1).toBeChecked();
+await checkbox2.uncheck();
+await expect(checkbox2).not.toBeChecked();
+})
+
+test('verify the noteditable/editable and tobeEmpty/noteditable', async({page}) => {
+await page.goto('https://the-internet.herokuapp.com/dynamic_controls');
+await expect(page.locator('input[type="text"]')).not.toBeEditable();
+await page.getByRole('button', {name: 'Enable'}).click();
+await expect(page.locator('input[type="text"]')).toBeEditable();
+await expect(page.locator('input[type="text"]')).toBeEmpty();
+await page.locator('input[type="text"]').fill('This field is edit able')
+await expect(page.locator('input[type="text"]')).not.toBeEmpty();
+})
+
