@@ -122,6 +122,3 @@ test('verify the user is able to sort A-Z', async ({page}) => {
     await page.locator('#logout_sidebar_link').click();
     await expect(page).toHaveURL('https://www.saucedemo.com/');
 })
-
-//hard wait, dynamic waits, ans when they are used, and how they are used.
-//asserstions and actions

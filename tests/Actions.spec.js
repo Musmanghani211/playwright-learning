@@ -125,7 +125,7 @@ console.log(scrolly);
 
 test('scroll to element', async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/large');
-    await page.locator('#content').last().scrollIntoViewIfNeeded;
+    await page.locator('#content').last().scrollIntoViewIfNeeded();
  await page.locator('#content').last().click();
  await expect(page.locator('#content')).toBeVisible();
 const scrolly = await page.evaluate(() => window.scrollY);
@@ -165,11 +165,12 @@ test('focus and keyboard practice', async ({ page }) => {
     await page.keyboard.press('Tab');
     await page.keyboard.type('secret_sauce');
     await page.keyboard.press('Enter');
+    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
 });
 
 //this is the screenshot action for inline method
 
-test.only('screenshot taking test', async ({page}) => {
+test('screenshot taking test', async ({page}) => {
     await page.goto('https://www.saucedemo.com/');
     await page.locator('#user-name').focus();
     await page.locator('#user-name').type('standard_user');
@@ -179,3 +180,4 @@ test.only('screenshot taking test', async ({page}) => {
     await page.screenshot({path: 'test-data/screenshotTest.png'})
 
 })
+
