@@ -108,3 +108,37 @@ await page.locator('input[type="text"]').fill('This field is edit able')
 await expect(page.locator('input[type="text"]')).not.toBeEmpty();
 })
 
+test('verify the tohaveCount action', async({page}) => {
+    await page.goto('https://the-internet.herokuapp.com/add_remove_elements/');
+    await page.locator('button[onclick="addElement()"]').click();
+    await expect(page.locator('button[onclick="deleteElement()"]')).toHaveCount(1);
+    await page.locator('button[onclick="deleteElement()"]').nth(0).click();
+    await expect(page.locator('button[onclick="deleteElement()"]')).not.toBeVisible();
+    for(let i = 0; i < 5; i++) {
+        await page.locator('button[onclick="addElement()"]').click();
+    }
+    await expect(page.locator('button[onclick="deleteElement()"]')).toHaveCount(5);
+    for(let i = 4; i >= 0; i--) {
+        await page.locator('button[onclick="deleteElement()"]').nth(i).click();
+    }
+    await expect(page.locator('button[onclick="deleteElement()"]')).toHaveCount(0);
+})
+
+//toHaveAttribute and toHaveClass assertions
+
+test.only('toHaveAttribute and toHaveClass assertions', async ({page}) => {
+    await page.goto('https://www.saucedemo.com/');
+    const usernameInput = page.locator('#user-name');
+    await expect.soft(usernameInput).toHaveAttribute('type', 'text');
+    await expect.soft(usernameInput).toHaveAttribute('placeholder', 'Username');
+    await usernameInput.fill('standard_user');
+     const passwordInput = page.locator('#password');
+    await expect.soft(passwordInput).toHaveAttribute('type', 'password');
+    await expect.soft(passwordInput).toHaveAttribute('placeholder', 'Password');
+    await passwordInput.fill('secret_sauce');
+    await page.locator('#login-button').click();
+    await expect(page.locator('.app_logo')).toHaveClass(/app_logo_abc/);
+    await page.locator('.inventory_item_name').first().click();
+    await expect.soft(page.locator('.inventory_details_name')).toHaveClass(/inventory_details_name/);
+    await expect.soft(page.locator('.inventory_details_price')).toHaveAttribute('class', 'inventory_details_price');
+})
