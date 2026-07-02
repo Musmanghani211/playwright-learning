@@ -117,10 +117,10 @@ test('verify the keyabors actions', async ({page}) =>{
 test('scroll to element and click', async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/large');
     await page.mouse.wheel(0,150);
- await page.locator('#content').last().click();
+    await page.locator('#content').last().click();
     await expect(page.locator('#large-table tr').last()).toBeVisible();
-const scrolly = await page.evaluate(() => window.scrollY);
-console.log(scrolly);
+    const scrollY = await page.evaluate(() => window.scrollY);
+    console.log(scrollY);   
 });
 
 test('scroll to element', async ({ page }) => {
