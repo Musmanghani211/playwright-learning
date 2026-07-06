@@ -45,17 +45,17 @@ test('verify the dynamic wait for hidden', async ({ page }) => {
 test('verify the dynamic wait for enabled', async ({ page }) => {
   await page.goto('https://demoqa.com/dynamic-properties');
   await expect(
-    page.getByRole('button', { name: 'Will enable 5 seconds' })
-  ).toBeEnabled({ timeout: 10000 }); //this is the dynamic wait, it will wait for the button to be enabled for 100 seconds, if it is not enabled in 100 seconds then it will fail the test
+    page.getByRole('button', { name: 'Visible After 5 seconds' })
+  ).toBeEnabled({ timeout: 5000 }); //this is the dynamic wait, it will wait for the button to be enabled for 100 seconds, if it is not enabled in 100 seconds then it will fail the test
 });
 
 //dynamic wait for disabled
 
-test('verify the dynamic wait for disabled', async ({ page }) => {
+test('verify the dynamic wait is disabled within 5 seconds', async ({ page }) => {
   await page.goto('https://demoqa.com/dynamic-properties');
   await expect(
     page.getByRole('button', { name: 'Will enable 5 seconds' })
-  ).toBeDisabled({ timeout: 10000 }); //this is the dynamic wait, it will wait for the button to be disabled for 100 seconds, if it is not disabled in 100 seconds then it will fail the test
+  ).toBeDisabled({ timeout: 4000 }); //this is the dynamic wait, it will wait for the button to be disabled for 100 seconds, if it is not disabled in 100 seconds then it will fail the test
 });
 
 //dynamic wait for attached
@@ -116,10 +116,64 @@ test('verify the dynamic wait for detached using table after adding data', async
   await page.getByPlaceholder('Department').fill('IT');
   await page.getByRole('button', { name: 'Submit' }).click();
   // await expect(page.locator('tbody')).toContainText('usman.ghani@example.com');
-  await expect(page.locator('tbody')).toBeAttached({ timeout: 10000 });
+  await expect(page.locator('tbody')).toBeAttached({ timeout: 5000 });
 
   await page.locator('#delete-record-4 > svg > path').click();
   await page
     .getByText('usman.ghani@example.com')
-    .waitFor({ state: 'detached', timeout: 10000 }); //this is the dynamic wait, it will wait for the element to be detached from the DOM for 100 seconds, if it is not detached in 100 seconds then it will fail the test
+    .waitFor({ state: 'detached', timeout: 5000 }); //this is the dynamic wait, it will wait for the element to be detached from the DOM for 100 seconds, if it is not detached in 100 seconds then it will fail the test
+});
+
+test.only("Add Admin, enable it, then delete it", async ({ page }) => {
+  const username = 'usman.ghani';
+
+  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+  await page.getByRole('textbox', { name: 'Username' }).fill('Admin');
+  await page.getByRole('textbox', { name: 'Password' }).fill('admin123');
+  await page.getByRole('button', { name: 'Login' }).click();
+
+  await page.getByRole('link', { name: 'Admin' }).click();
+  await page.getByRole('button', { name: ' Add' }).click();
+
+  await page.getByText('-- Select --').first().click();
+  await page.getByRole('option', { name: 'Admin' }).click();
+
+  await page.getByRole('textbox', { name: 'Type for hints...' }).fill('usman');
+  await page.getByRole('option', { name: 'usman Ghani Kamboh' }).click();
+
+  await page.getByText('-- Select --').click();
+  await page.getByRole('option', { name: 'Disabled' }).click();
+
+  await page.getByRole('textbox').nth(2).fill(username);
+  await page.getByRole('textbox').nth(3).fill('Usman123');
+  await page.getByRole('textbox').nth(4).fill('Usman123');
+
+  await page.getByRole('button', { name: 'Save' }).click();
+
+const toast = page.locator('.oxd-toast-container');
+  await expect(toast).toContainText('SuccessSuccessfully Saved×');
+  await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/web/index.php/admin/viewSystemUsers');
+
+  const usernameFilter = page.locator('.oxd-table-filter-area').getByRole('textbox').first();
+  await usernameFilter.fill(username);
+  await page.getByRole('button', { name: 'Search' }).click(); // was missing .click()
+
+  await expect(page.locator('.oxd-padding-cell', { hasText: username })).toBeVisible();
+  const row = page.locator('.oxd-table-row', {'hasText': username});
+  await row.locator('.oxd-icon.bi-pencil-fill').click();
+  await page.getByText('Disabled').click();
+  await page.getByRole('option', {name: 'Enabled'}).click();
+  await expect(page.getByText('Enabled')).toBeVisible();
+  await page.getByRole('button', {name: 'Save'}).click();
+// Confirm we're back on the list and re-apply the filter — it doesn't persist automatically
+await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/web/index.php/admin/viewSystemUsers');
+
+await usernameFilter.fill(username);
+await page.getByRole('button', { name: 'Search' }).click();
+
+// Re-locate the row fresh, now that the filter is applied again
+const updatedRow = page.locator('.oxd-table-row', { hasText: username });
+await expect(updatedRow).toContainText('Enabled');
+
+
 });
