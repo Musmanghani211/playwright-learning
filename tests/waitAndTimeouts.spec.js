@@ -110,9 +110,7 @@ test('verify the dynamic wait for detached using table after adding data', async
   await page.getByRole('button', { name: 'Add' }).click();
   await page.getByPlaceholder('First Name').fill('usman');
   await page.getByPlaceholder('Last Name').fill('ghani');
-  await page
-    .getByPlaceholder('name@example.com')
-    .fill('usman.ghani@example.com');
+  await page.getByPlaceholder('name@example.com').fill('usman.ghani@example.com');
   await page.getByPlaceholder('Age').fill('30');
   await page.getByPlaceholder('Salary').fill('50000');
   await page.getByPlaceholder('Department').fill('IT');
