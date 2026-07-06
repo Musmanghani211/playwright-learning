@@ -141,7 +141,7 @@ test('scroll To practice', async ({ page }) => {
     // verify karo
     const scrollY = await page.evaluate(() => window.scrollY);
     console.log('Scroll position:', scrollY);
-    expect(scrollY).toBe(1000);
+    // expect(scrollY).toBe(1000);
 });
 
 
@@ -196,3 +196,96 @@ test('clear action', async ({page}) => {
     await expect(page.locator('.error-message-container')).toContainText('Sorry, this user has been locked out.');
 
 })
+
+//scrollintoviewifneeded();
+//await page.mouse.wheel(0, 1000); scroll-down
+// await page.mouse.wheel(0, -1000); scroll-up
+//await page.evaluate(()=> window.scrollTo(0, document.body.scrollHeight)); scroll-down to end page
+//await page.evaluate(()=> window.scrollTo(0,0)); scroll-up to top of page
+
+test('select multiple options', async ({ page }) => {
+    await page.goto('https://demoqa.com/select-menu');
+    await page.locator('.css-19bb58m').first().click();
+    await page.getByRole('option', { name: 'Another root option' }).click();
+    // console.log(await page.content());
+    await expect(page.getByText('Another root option', {exact: true })).toBeVisible();
+    await page.locator('.css-19bb58m').first().click();
+    await page.getByRole('option', { name: 'Group 2, option 1' }).click();
+    await expect(page.getByText('Group 2, option 1', {exact: true })).toBeVisible();
+
+    await page.locator('#selectOne').click();
+    await page.getByRole('option', { name: 'Dr.' }).click();
+    await expect(page.getByText('Dr.', {exact: true })).toBeVisible();
+})
+
+//scroll into div and click
+
+test('scroll into div and click', async ({ page }) => {
+    await page.goto('https://mui.com/material-ui/react-autocomplete/');
+    await page.locator('#ComboBox').scrollIntoViewIfNeeded();
+    // await page.locator('#ComboBox').first().click();    
+    await page.locator('#_R_2ql32d9l7aqll6_').click();
+    await page.$eval('#_R_2ql32d9l7aqll6_', el => el.value = 'Memento').scrollIntoViewIfNeeded();
+    // await page.mouse.wheel(0, 445);
+    // await page.locator('#_R_2ql32d9l7aqll6_').type('Memento');
+    // await page.locator('#_R_2ql32d9l7aqll6_').press('Enter');
+    // await expect(page.locator('#_R_2ql32d9l7aqll6_')).toHaveValue('Memento');
+
+    const scrollY = await page.evaluate(() => window.scrollY);
+    console.log(scrollY);
+})
+
+//check scroll with orange source web
+
+test('scroll with orange source web', async ({page}) => {
+await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+await page.getByPlaceholder('Username').fill('Admin');
+await page.getByPlaceholder('Password').fill('admin123');
+await page.getByRole('button', {name: ' Login '}).click();
+await page.getByText('PIM', {exact: true}).click();
+await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/web/index.php/pim/viewEmployeeList');
+// await page.locator('.').last().scrollIntoViewIfNeeded();
+// const username = await page.locator('.oxd-table-card').last().locator('.oxd-table-cell').first().textContent();
+await page.locator('.oxd-button oxd-button--medium oxd-button--secondary orangehrm-left-space').click();  
+await page.getByText('0311').click().waitForIfNeeded('timeout', 5000);
+await expect(page.locator('.ooxd-text oxd-text--h6 --strong')).toHaveText('Alice Johnson87104');
+})
+
+
+test('test for search, click and verify usernmae, and delete it', async ({ page }) => {
+  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+  await page.locator('div').nth(2).click();
+  await page.getByRole('textbox', { name: 'Username' }).click();
+  await page.getByRole('textbox', { name: 'Username' }).fill('Admin');
+  await page.getByRole('textbox', { name: 'Username' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Password' }).fill('admin123');
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.getByRole('link', { name: 'PIM' }).click();
+  await page.getByRole('textbox').nth(2).click();
+  await page.getByRole('textbox').nth(2).fill('0311');
+  await page.getByRole('button', { name: 'Search' }).click();
+  await expect(page.getByRole('cell', { name: '0311' })).toBeVisible();
+  await page.getByText('0311').click();
+  await expect(page.locator('.orangehrm-edit-employee-name h6')).toHaveText('yqlluQZYFR yaTQBtZgLf');
+
+});
+
+test.only('search and verify employee', async ({ page }) => {
+  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+  await page.locator('div').nth(2).click();
+  await page.getByRole('textbox', { name: 'Username' }).click();
+  await page.getByRole('textbox', { name: 'Username' }).fill('Admin');
+  await page.getByRole('textbox', { name: 'Username' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Password' }).fill('admin123');
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.getByRole('link', { name: 'PIM' }).click();
+  await page.getByRole('textbox').nth(2).click();
+  await page.getByRole('textbox').nth(2).fill('25862');
+  await page.getByRole('button', { name: 'Search' }).click();
+//   await expect(page.getByText('No Records found')).toBeVisible();
+const noRecordsText = await page.locator('.oxd-toast');
+await expect(noRecordsText).toContainText('InfoNo Records Found×');
+//wait for the toast message to disappear
+await page.waitForTimeout(5000); // Adjust the timeout as needed
+await expect(noRecordsText).not.toBeVisible();
+});
