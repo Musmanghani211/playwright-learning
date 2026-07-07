@@ -124,7 +124,7 @@ test('verify the dynamic wait for detached using table after adding data', async
     .waitFor({ state: 'detached', timeout: 5000 }); //this is the dynamic wait, it will wait for the element to be detached from the DOM for 100 seconds, if it is not detached in 100 seconds then it will fail the test
 });
 
-test.only("Add Admin, enable it, then delete it", async ({ page }) => {
+test("Add Admin, enable it, then delete it", async ({ page }) => {
   const username = 'usman.ghani';
 
   await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
@@ -177,3 +177,66 @@ await expect(updatedRow).toContainText('Enabled');
 
 
 });
+
+
+//add user
+
+
+test("Add employee via PIM @addemployee", async ({ page }) => {
+  const employeeId = '5948847';
+
+  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+  await page.getByRole('textbox', { name: 'Username' }).fill('Admin');
+  await page.getByRole('textbox', { name: 'Password' }).fill('admin123');
+  await page.getByRole('button', { name: 'Login' }).click();
+
+  await page.getByRole('link', { name: 'PIM' }).click();
+  await page.getByRole('button', { name: ' Add' }).click();
+  await expect(page).toHaveURL('https://opensource-demo.orangehrmlive.com/web/index.php/pim/addEmployee');
+
+  await page.getByPlaceholder('First Name').fill('Usman');
+  await page.getByPlaceholder('Middle Name').fill('Ghani');
+  await page.getByPlaceholder('Last Name').fill('Kamboh');
+
+const employeeIdInput = page.locator('.oxd-input-group', { hasText: 'Employee Id' }).locator('input');
+await employeeIdInput.clear();
+await employeeIdInput.fill(employeeId);
+
+await page.getByRole('button', { name: 'Save' }).click();
+
+
+});
+
+//delete the employ
+
+test('deleting the exisiting employ @deleteEmployee', async ({page}) => {
+  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
+  await page.getByRole('textbox', { name: 'Username' }).fill('Admin');
+  await page.getByRole('textbox', { name: 'Password' }).fill('admin123');
+  await page.getByRole('button', { name: 'Login' }).click();
+
+  await page.getByRole('link', { name: 'PIM' }).click();
+  const employIdInput = page.locator('.oxd-input-group', {hasText: 'Employee Id'}).locator('input');
+  await employIdInput.fill('5948847');
+
+  await page.getByRole('button', { name: ' Search' }).click();
+const toast = page.locator('.oxd-toast-container');
+await toast.waitFor({ state: 'visible', timeout: 3000 }).catch(() => {});
+
+if (await toast.isVisible()) {
+  console.log('No data to delete — toast message present:', await toast.textContent());
+} else
+{
+  await expect(
+  page.locator('.oxd-table-row', { hasText: '5948847' })
+).toBeVisible();
+
+await page.locator('.oxd-table-cell-action-space').nth(1).click();
+await page.getByRole('button', {name: 'Yes, Delete'}).click();
+  await expect(
+  page.locator('.oxd-table-row', { hasText: '5948847' })
+).not.toBeVisible();
+}
+})
+
+
