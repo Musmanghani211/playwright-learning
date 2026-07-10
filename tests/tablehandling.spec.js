@@ -1,4 +1,5 @@
 import {test, expect} from '@playwright/test';
+import { match } from 'node:assert';
 
 test('find the total number of rows and columns and chekc the checkboxes', async({page}) => {
 await page.goto('https://testautomationpractice.blogspot.com/')
@@ -305,7 +306,7 @@ console.log(cellData);
 
 //select on item by using ID from the last page.
 
-test.only('select one row using ID', async({page}) =>{
+test('select one row using ID', async({page}) =>{
     await page.goto('https://testautomationpractice.blogspot.com/');
     const table = await page.locator('#productTable');
     const tableData = await table.locator('tbody');
@@ -340,3 +341,32 @@ if(idText === targetID){
 }
 
 
+//search the data into the table.
+
+test.only('search the specific row data into the table', async({page}) => {
+    await page.goto('https://www.testmuai.com/selenium-playground/table-sort-search-demo/');
+    const table = await page.locator('#example');
+    const tablebody = await table.locator('tbody');
+    const rows = await tablebody.locator('tr');
+    const columns = await table.locator('thead');
+//    console.log(await rows.count());
+
+    // select search locator and fill the name
+    const searchBox = await page.getByLabel('Search');
+    await searchBox.fill('New York');
+    const rowsCount = await rows.count();
+    console.log("Total rows after search: ", rowsCount);
+
+    // let UserName = "J. Caldwell";
+    // const mathcedRow = await rows.filter({hasText: UserName});
+    // const matchedRowData = await mathcedRow.locator('td').allTextContents();
+    // console.log(matchedRowData);
+
+
+    const matchedRow = await rows.locator('td');
+   console.log()
+
+    // await expect(matchedRow).toContainText('Auditor');
+    // const matchedRowData = await matchedRow.allTextContents();
+    // console.log(matchedRowData);
+})
