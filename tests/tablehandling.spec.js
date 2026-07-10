@@ -343,7 +343,7 @@ if(idText === targetID){
 
 //search the data into the table.
 
-test.only('search the specific row data into the table', async({page}) => {
+test('search the specific row data into the table', async({page}) => {
     await page.goto('https://www.testmuai.com/selenium-playground/table-sort-search-demo/');
     const table = await page.locator('#example');
     const tablebody = await table.locator('tbody');
@@ -369,4 +369,35 @@ test.only('search the specific row data into the table', async({page}) => {
     // await expect(matchedRow).toContainText('Auditor');
     // const matchedRowData = await matchedRow.allTextContents();
     // console.log(matchedRowData);
+})
+
+
+//search using ID in organgeHRM website
+
+test.only('search employ', async({page}) =>{
+    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+    await page.getByPlaceholder('username').fill('Admin');
+    await page.keyboard.press('Tab');
+    await page.getByPlaceholder('Password').fill('admin123');
+    await page.getByRole('button', {name: 'Login'}).click();
+    await page.getByText('PIM').click();
+
+    
+   await page.getByRole('textbox').nth(2).fill('0042');
+   await page.getByRole('button', {name: 'Search'}).click();
+
+    const table = await page.locator('.oxd-table .orangehrm-employee-list').getByRole('table');
+    
+    const tablebody = await table.locator('.oxd-table-body');
+   const rows = page.locator('.oxd-table-body').getByRole('row');
+    await expect(rows).toHaveCount(1);
+
+    // await expect(rows).toBeVisible(); // wait until rows render
+    const rowsCount = await rows.count();
+    console.log('Total employees with this ID: ', rowsCount);
+    const rowsData = await rows.locator('.oxd-table-cell').allTextContents();
+    const OnlyData = await rowsData.slice(1, -2)
+    console.log(OnlyData);
+
+
 })

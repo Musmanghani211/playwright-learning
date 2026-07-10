@@ -252,7 +252,7 @@ await expect(page.locator('.ooxd-text oxd-text--h6 --strong')).toHaveText('Alice
 })
 
 
-test('test for search, click and verify usernmae, and delete it', async ({ page }) => {
+test('test for search, click and verify username, and delete it', async ({ page }) => {
   await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
   await page.locator('div').nth(2).click();
   await page.getByRole('textbox', { name: 'Username' }).click();
