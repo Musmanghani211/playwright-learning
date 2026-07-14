@@ -234,4 +234,3 @@ test('nested framing', async ({ page }) => {
 | Native alerts/confirm/prompt | `https://the-internet.herokuapp.com/javascript_alerts` |
 | Single iframe | `https://the-internet.herokuapp.com/iframe` |
 | Nested frames (frameset) | `https://the-internet.herokuapp.com/nested_frames` |
-| iframe with forms (extra practice) | `https://letcode.in/frames` |
