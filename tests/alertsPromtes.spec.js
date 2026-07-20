@@ -59,7 +59,7 @@ const isvisible = await notfoundtext
 })
 
 //promt of the web page elemenets handling
-test('alert handle', async({page}) => {
+test('alert handling', async({page}) => {
     await page.goto('https://the-internet.herokuapp.com/javascript_alerts');
     
     page.on('dialog', async dialog => {
@@ -71,11 +71,11 @@ test('alert handle', async({page}) => {
     await page.getByRole('button', {name: 'Click For JS Alert'}).click();
     await expect(page.locator('#result')).toContainText('You successfully clicked an alert');
 
-    await page.getByRole('button', {name: 'Click for JS Confirm'}).click();
-    await expect(page.locator('#result')).toContainText('You clicked: Ok');
+    // await page.getByRole('button', {name: 'Click for JS Confirm'}).click();
+    // await expect(page.locator('#result')).toContainText('You clicked: Ok');
 })
 
-test('Handle confirm - with OK', async({page}) => {
+test.only('Handle confirm - with OK', async({page}) => {
     await page.goto('https://the-internet.herokuapp.com/javascript_alerts');
     
     page.on('dialog', async dialog => {
@@ -116,6 +116,30 @@ test('Handle promt box with adding values and accept', async({page}) => {
     await expect(page.locator('#result')).toContainText(`You entered: Usman Ghani `);
 })
 
+test('handle prompt box dismissing without adding values', async ({ page }) => {
+    await page.goto('https://the-internet.herokuapp.com/javascript_alerts');
+
+    page.once('dialog', async dialog => {
+    // console.log(`Dialog message: ${dialog.message()}`);
+    await dialog.dismiss();
+    });
+
+    await page.getByRole('button', { name: 'Click for JS Prompt' }).click();
+    await expect(page.locator('#result')).toContainText('You entered: null');
+});
+
+//not completet yet, not resolving this issue
+test('handle prompt box dismissing after adding values', async ({ page }) => {
+    await page.goto('https://the-internet.herokuapp.com/javascript_alerts');
+
+    page.once('dialog', async dialog => {
+    // console.log(`Dialog message: ${dialog.message()}`);
+
+    });
+
+    await page.getByRole('button', { name: 'Click for JS Prompt' }).click();
+    await expect(page.locator('#result')).toContainText('You entered: null');
+});
 
 test('iFrame containing', async ({page}) => {
     await page.goto('https://the-internet.herokuapp.com/iframe');

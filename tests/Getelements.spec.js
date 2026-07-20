@@ -19,7 +19,7 @@ test ('select third element', async ({page}) => {
     await page.getByPlaceholder('Username').fill("standard_user");
     await page.getByPlaceholder("Password").fill("secret_sauce");
     await page.getByRole('button', {name:'Login'}).click();
-    await page.locator('.inventory_item_name ').nth(2).click();
+    await page.locator('.inventory_item_name').nth(2).click();
     await expect(page.locator('.inventory_details_name')).toHaveText('Sauce Labs Bolt T-Shirt');
 })
 
