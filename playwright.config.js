@@ -24,6 +24,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
+  // headless: false,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
@@ -34,7 +35,7 @@ locale: 'en-US',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
 
-    slowMo: 0,
+    slowMo: 1000,
   },
 
   /* Configure projects for major browsers */
