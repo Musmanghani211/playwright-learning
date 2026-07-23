@@ -253,35 +253,100 @@ page.locator('button:has-text("Log in")').click();
 
 
 test('xpath locator found from selectorCSS', async ({ page }) => {
-  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
-  await page.getByPlaceholder('Username').fill('Admin');
-  await page.getByPlaceholder('Password').fill('admin123');
-  await page.getByRole('button', { name: 'Login' }).click();
-  await page.getByRole('link', { name: 'Admin' }).click();
-  await page.locator("//div[@class='oxd-input-group oxd-input-field-bottom-space']//div//input[@class='oxd-input oxd-input--active']").fill("auto_user_hbYeMW338");
-  await page.getByRole('button', { name: 'Search' }).click();
-  const table = await page.locator('.oxd-table');
-  const tablebody = await table.locator('.oxd-table-body');
-  const rows = await tablebody.locator('.oxd-table-row');
-  await rows.first().waitFor({ state: 'visible', timeout: 10000 });
-  const targetrow = await rows.filter({hasText: 'auto_user_hbYeMW338'}).first();
-  await expect(targetrow).toContainText('Enable');
- await targetrow.locator('i.oxd-icon.bi-pencil-fill').click();
+  await page.goto('https://demoqa.com/');
+  await page.locator("//a[@href='/elements']//div[@class='card mt-4 top-card']").click();
+  await expect(page).toHaveURL('https://demoqa.com/elements');
+ await page.locator ("body > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > ul:nth-child(1) > li:nth-child(7)").click();
 
- await page.getByText('Enabled', { exact: true }).click();
- await page.getByRole('option', {name: 'Disable'}).click();
- await page.getByRole('button', { name: 'Save' }).click();
+ const images = await page.locator('img');
+ const count = await images.count();
+  for (let i = 0; i < count; i++) {
+    const alt = await images.nth(i).getAttribute('alt');
+    console.log(`Image ${i}: alt="${alt}"`);
+  }
 
-  await page.locator("//div[@class='oxd-input-group oxd-input-field-bottom-space']//div//input[@class='oxd-input oxd-input--active']").fill("auto_user_hbYeMW338");
-  await page.getByRole('button', { name: 'Search' }).click();
-  await expect(targetrow).toBeVisible({ timeout: 10000 });
-const cells = await targetrow.locator('.oxd-table-cell').allTextContents();
-console.log(cells) 
-await expect(targetrow).toContainText('Disable');
+//  await expect(page.locator("body > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > p:nth-child(2)"))
 
-await targetrow.locator('//body[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[2]/div[3]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/button[1]/i[1]').click();
-await page.getByRole('button', {name: 'Yes, Delete'}).click();
-    await expect(page.locator('.oxd-toast')).toContainText('Successfully Deleted');
+// await page.getByRole('link', {name: 'Admin'}).click();
+//   await page.locator("//div[@class='oxd-input-group oxd-input-field-bottom-space']//div//input[@class='oxd-input oxd-input--active']").fill("auto_user_hbYeMW338");
+//   await page.getByRole("(//button[normalize-space()='Rechercher'])[1]").click();
+//   const table = await page.locator('.oxd-table');
+//   const tablebody = await table.locator('.oxd-table-body');
+//   const rows = await tablebody.locator('.oxd-table-row');
+//   await rows.first().waitFor({ state: 'visible', timeout: 10000 });
+//   const targetrow = await rows.filter({hasText: 'auto_user_hbYeMW338'}).first();
+//   await expect(targetrow).toContainText('Enable');
+//  await targetrow.locator('i.oxd-icon.bi-pencil-fill').click();
+
+//  await page.getByText('Enabled', { exact: true }).click();
+//  await page.getByRole('option', {name: 'Disable'}).click();
+//  await page.getByRole('button', { name: 'Save' }).click();
+
+//   await page.locator("//div[@class='oxd-input-group oxd-input-field-bottom-space']//div//input[@class='oxd-input oxd-input--active']").fill("auto_user_hbYeMW338");
+//   await page.getByRole('button', { name: 'Search' }).click();
+//   await expect(targetrow).toBeVisible({ timeout: 10000 });
+// const cells = await targetrow.locator('.oxd-table-cell').allTextContents();
+// console.log(cells) 
+// await expect(targetrow).toContainText('Disable');
+
+// await targetrow.locator('//body[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[2]/div[3]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/button[1]/i[1]').click();
+// await page.getByRole('button', {name: 'Yes, Delete'}).click();
+//     await expect(page.locator('.oxd-toast')).toContainText('Successfully Deleted');
 
 
+})
+
+
+test('test-data locators', async({page}) => {
+  await page.goto('https://www.saucedemo.com/');
+  await page.locator("[id='user-name']").fill('standard_user');
+  await page.locator("[id='password']").fill('secret_sauce');
+  await page.locator("[id='login-button']").click();
+
+  await page.locator("//button[@id='react-burger-menu-btn']").click();
+  await page.locator("#logout_sidebar_link").click();
+  await expect(page).toHaveURL('https://www.saucedemo.com/');
+})
+
+test('each image individually must load and have alt text', async ({ page }) => {
+  await page.goto('https://practice-automation.com/broken-images/');
+ 
+  const images = page.locator('img');
+  const count = await images.count();
+  console.log(count);
+ 
+  for (let i = 0; i < count; i++) {
+    const img = images.nth(i);
+    const src = await img.getAttribute('src');
+    const alt = await img.getAttribute('alt');
+
+const isbroken = await img.evaluate((el) => !el.complete || el.naturalWidth === 0);
+    // const isBroken = await img.evaluate((el) => !el.complete || el.naturalWidth === 0);
+
+    console.log(isbroken, src);
+    await expect.soft(isbroken).toBe(false);
+ 
+    // expect.soft(isBroken, `Image ${i} (src: ${src}) is broken`).toBe(false);
+    // expect(alt, `Image ${i} (src: ${src}) is missing alt text`).toBeTruthy();
+  }
+})
+
+//geting all the images of clinVerfiy website
+
+test('ClinVerify images checking', async({page}) => {
+  await page.goto('https://cn.skpluss.com/categories/');
+  await waitForLoadState('networkidle')
+  const images = await page.locator('img');
+  const ImagesCount = await images.count();
+  console.log('total images count is: ', ImagesCount)
+
+  for(let i = 0; i < ImagesCount; i++){
+    const img = await images.nth(i);
+    const src = await img.getAttribute('src');
+    const alt = await img.getAttribute('alt');
+    await img.scrollIntoViewIfNeeded();
+    const isbroken = await img.evaluate((el) => !el.complete || el.naturalWidth === 0);
+    console.log(isbroken, src);
+    await expect.soft(isbroken).toBe(false);
+  }
 })
