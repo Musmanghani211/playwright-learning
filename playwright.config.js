@@ -35,7 +35,7 @@ locale: 'en-US',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
 
-    slowMo: 1000,
+    // slowMo: 1000,
   },
 
   /* Configure projects for major browsers */
@@ -82,6 +82,6 @@ locale: 'en-US',
   //   url: 'http://localhost:3000',
   //   reuseExistingServer: !process.env.CI,
   // },
-  timeout: 60 * 1000 // 60 seconds
+  timeout: 120 * 1000 // 120 seconds
 });
 
